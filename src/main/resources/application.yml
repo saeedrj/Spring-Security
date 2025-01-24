@@ -1,0 +1,66 @@
+spring:
+  profiles:
+    active: ${active_profile:dev}
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      fail-on-empty-beans: false
+      close-closeable: true
+      flush-after-write-value: true
+      write-date-keys-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+  datasource:
+   url: jdbc:mysql://${database_host}:${database_port}/${database_name}
+   username: ${database_username}
+   password: ${database_password}
+   driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+    generate-ddl: true
+  sql:
+    init:
+      mode: never
+      continue-on-error: false
+      schema-locations: classpath:/data/schema.sql
+      data-locations: classpath:/data/data.sql
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 1000MB
+      max-request-size: 1000MB
+
+  mail:
+    host: ${email_host}
+    port: ${email_port}
+    username: ${email_id}
+    password: ${email_password}
+    default-encoding: UTF-8
+    properties:
+      mail:
+        mime:
+          charset: UTF-8
+        smtp:
+          write-timeout: 10000
+          connection-timeout: 1000
+          timeout: 1000
+          auth: true
+          starttls:
+            enable: true
+            required: true
+    verify:
+      host: ${verify_host}
+
+server:
+  port: ${testcontainers_port:8080}
+  error:
+    path: /user/error
+    whitelabel:
+      enabled: false

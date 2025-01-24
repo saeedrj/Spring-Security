@@ -1,0 +1,17 @@
+#Email
+email_host: smtp.gmail.com
+email_port: 587
+email_id: your_email@gmail.com
+email_password: your_password
+verify_host: http://localhost:8085
+
+#Server
+active_profile: dev
+testcontainers_port : 8081
+
+#Database
+database_username: root
+database_password:
+database_name: learn
+database_port: 3306
+database_host: localhost
