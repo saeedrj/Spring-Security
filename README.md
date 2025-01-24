@@ -23,6 +23,5 @@ This project demonstrates a simple file upload and management system using Sprin
 
 ## How to Run
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/UploadFileRepository.git
+   git clone https://github.com/saeedrj/UploadFileRepository-with-Springboot-and-React.git
    cd UploadFileRepository
