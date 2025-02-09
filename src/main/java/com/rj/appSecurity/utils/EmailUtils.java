@@ -2,14 +2,14 @@ package com.rj.appSecurity.utils;
 
 public class EmailUtils {
 
-    public static String getEmailMessage(String name, String host, String token) {
+    public static String getEmailMessage(String name, String host, String key) {
         return String.format(
                 "Hi %s,\n\n" +
                         "Welcome! Please activate your account using the link below:\n" +
-                        "%s/verify?token=%s\n\n" +
+                        "%s/verify/account?key=%s\n\n" +
                         "If this wasn't you, ignore this email.\n\n" +
                         "Thanks,\nYour Company Team",
-                name, host, token
+                name, host, key
         );
     }
 

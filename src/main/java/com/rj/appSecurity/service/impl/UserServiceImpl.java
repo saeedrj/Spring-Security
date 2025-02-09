@@ -47,6 +47,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void verifyAccount(String key) {
+    ConfirmationEntity confirmEntity =getUserConfirm(key);
+    UserEntity userEntity = getUserEntityByEmail(confirmEntity.getUserEntity().getEmail());
+    userEntity.setEnabled(true);
+    userRepository.save(userEntity);
+    confirmationRepository.delete(confirmEntity);
+    }
+
+    private UserEntity getUserEntityByEmail(String email) {
+        var userByEmail = userRepository.findByEmailIgnoreCase(email);
+        return userByEmail.orElseThrow(() -> new ApiException("User not found"));
+    }
+
+    private ConfirmationEntity getUserConfirm(String key) {
+        return confirmationRepository.findByKey(key).orElse(null);
+    }
+
+    @Override
     public RoleEntity getRoleName(String name) {
         var role = roleRepository.findByNameIgnoreCase(name);
         return role.orElseThrow(() -> new ApiException("Role not found"));

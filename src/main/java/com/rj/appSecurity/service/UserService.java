@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 public interface UserService {
     void createUser(String firstName, String lastName, String email, String password);
     RoleEntity getRoleName(String name);
-
-
+    void verifyAccount(String token);
 }
