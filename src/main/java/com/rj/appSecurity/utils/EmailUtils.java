@@ -6,7 +6,7 @@ public class EmailUtils {
         return String.format(
                 "Hi %s,\n\n" +
                         "Welcome! Please activate your account using the link below:\n" +
-                        "%s/verify/account?key=%s\n\n" +
+                        "%s/user/verify/account?key=%s\n\n" +
                         "If this wasn't you, ignore this email.\n\n" +
                         "Thanks,\nYour Company Team",
                 name, host, key

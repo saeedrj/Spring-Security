@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -33,18 +32,20 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<Response> register(@RequestBody @Valid UserRequestDto user, HttpServletRequest request) {
         userService.createUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword());
-        return ResponseEntity.created(getUri()).body(getResponse(request,emptyMap(),"Account created . cheack your email to enable your account ",CREATED));
+        return ResponseEntity.created(getUri()).body(getResponse(request, emptyMap(), "Account created . check your email to enable your account ", CREATED));
     }
+
     @GetMapping("/verify/account")
-    public ResponseEntity<Response> verifyAccount(@RequestParam("token") String key, HttpServletRequest request) {
+    public ResponseEntity<Response> verifyAccount(@RequestParam("key") String key, HttpServletRequest request) {
         userService.verifyAccount(key);
-        return ResponseEntity.created(getUri()).body(getResponse(request,emptyMap(),"Account verified",OK));
+        return ResponseEntity.created(getUri()).body(getResponse(request, emptyMap(), "Account verified", OK));
     }
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserRequestDto user) {
-        Authentication authentication = authenticationManager.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(user.getEmail(),user.getPassword()));
-        return ResponseEntity.ok(Map.of("user",authentication));
-    }
+
+//    @PostMapping("/login")
+//    public ResponseEntity<?> login(@RequestBody UserRequestDto user) {
+//        Authentication authentication = authenticationManager.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(user.getEmail(), user.getPassword()));
+//        return ResponseEntity.ok(Map.of("user", authentication));
+//    }
 
     private URI getUri() {
         return URI.create("");

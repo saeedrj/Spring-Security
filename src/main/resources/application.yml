@@ -18,7 +18,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     open-in-view: false
     properties:
       hibernate:
@@ -57,6 +57,8 @@ spring:
             required: true
     verify:
       host: ${verify_host}
+  cache:
+    expiryDuration: ${expiryDuration}
 
 server:
   port: ${testcontainers_port:8080}

@@ -1,11 +1,14 @@
 package com.rj.appSecurity.service.impl;
 
+import com.rj.appSecurity.cache.CacheStore;
+import com.rj.appSecurity.domain.RequestContext;
 import com.rj.appSecurity.entity.ConfirmationEntity;
 import com.rj.appSecurity.entity.CredentialEntity;
 import com.rj.appSecurity.entity.RoleEntity;
 import com.rj.appSecurity.entity.UserEntity;
 import com.rj.appSecurity.enumeration.Authority;
 import com.rj.appSecurity.enumeration.EventType;
+import com.rj.appSecurity.enumeration.LoginType;
 import com.rj.appSecurity.event.UserEvent;
 import com.rj.appSecurity.exception.ApiException;
 import com.rj.appSecurity.repository.ConfirmationRepository;
@@ -19,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import static com.rj.appSecurity.utils.UserUtils.createUserEntity;
@@ -32,8 +36,7 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final CredentialRepository credentialRepository;
     private final ConfirmationRepository confirmationRepository;
-
-    //    private final PasswordEncoder passwordEncoder;
+    private final CacheStore<String, Integer> userCache;
     private final ApplicationEventPublisher publisher;
 
     @Override
@@ -48,11 +51,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void verifyAccount(String key) {
-    ConfirmationEntity confirmEntity =getUserConfirm(key);
-    UserEntity userEntity = getUserEntityByEmail(confirmEntity.getUserEntity().getEmail());
-    userEntity.setEnabled(true);
-    userRepository.save(userEntity);
-    confirmationRepository.delete(confirmEntity);
+        ConfirmationEntity confirmEntity = getUserConfirm(key);
+        UserEntity userEntity = getUserEntityByEmail(confirmEntity.getUserEntity().getEmail());
+        userEntity.setEnabled(true);
+        userRepository.save(userEntity);
+        confirmationRepository.delete(confirmEntity);
     }
 
     private UserEntity getUserEntityByEmail(String email) {
@@ -73,5 +76,31 @@ public class UserServiceImpl implements UserService {
     private UserEntity createNewUser(String firstName, String lastName, String email, String password) {
         var role = getRoleName(Authority.USER.name());
         return createUserEntity(firstName, lastName, email, role);
+    }
+
+    @Override
+    public void updateLoginAttempt(String email, LoginType loginType) {
+        var userEntity = getUserEntityByEmail(email);
+        RequestContext.setUserId(userEntity.getId());
+        switch (loginType) {
+            case LOGIN_ATTEMPT -> {
+                if (userCache.get(userEntity.getEmail()) == null) {
+                    userEntity.setLoginAttempts(0);
+                    userEntity.setAccountNonLocked(false);
+                }
+                userEntity.setLoginAttempts(userEntity.getLoginAttempts() + 1);
+                userCache.put(userEntity.getEmail(), userEntity.getLoginAttempts());
+                if (userCache.get(userEntity.getEmail()) > 5) {
+                    userEntity.setAccountNonLocked(false);
+                }
+            }
+            case LOGOUT_SUCCESS -> {
+                userEntity.setLoginAttempts(0);
+                userEntity.setAccountNonLocked(true);
+                userEntity.setLastLogin(LocalDateTime.now());
+                userCache.evict(userEntity.getEmail());
+            }
+        }
+        userRepository.save(userEntity);
     }
 }

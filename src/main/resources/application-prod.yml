@@ -15,3 +15,6 @@ database_password:
 database_name: learn
 database_port: 3306
 database_host: localhost
+
+#cache
+expiryDuration: 900

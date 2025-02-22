@@ -40,7 +40,6 @@ public class EmailServiceImpl implements EmailSerivce {
             message.setTo(email);
             message.setText(getEmailMessage(name, host, token));
             sender.send(message);
-            log.info("Verification email successfully sent to: {}", email);
         } catch (Exception e) {
             log.error("Failed to send verification email to: {}. Error: {}", email, e.getMessage(), e);
             throw new ApiException("unable to send Email");
@@ -51,7 +50,7 @@ public class EmailServiceImpl implements EmailSerivce {
     @Async
     public void sendPasswordRestEmail(String name, String email, String token) {
         try {
-            log.info("Attempting to send new account verification email to: {}", email);
+            log.info("Attempting to send sendPasswordRestEmail email to: {}", email);
 
             var message = new SimpleMailMessage();
             message.setSubject(REST_PASSWORD_REQUEST);
@@ -59,9 +58,8 @@ public class EmailServiceImpl implements EmailSerivce {
             message.setTo(email);
             message.setText(getResetPasswordMessage(name, host, token));
             sender.send(message);
-            log.info("Verification email successfully sent to: {}", email);
         } catch (Exception e) {
-            log.error("Failed to send verification email to: {}. Error: {}", email, e.getMessage(), e);
+            log.error("Failed to send sendPasswordRestEmail email to: {}. Error: {}", email, e.getMessage(), e);
             throw new ApiException("unable to send Email");
         }
     }

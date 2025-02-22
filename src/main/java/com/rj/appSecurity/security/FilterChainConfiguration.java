@@ -1,5 +1,7 @@
 package com.rj.appSecurity.security;
 
+import com.rj.appSecurity.repository.CredentialRepository;
+import com.rj.appSecurity.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,9 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -20,39 +20,23 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class FilterChainConfiguration {
 
+    private final UserRepository userRepository;
+    private final CredentialRepository credentialRepository;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
-                        request.requestMatchers("user/login").permitAll()
+                        request.requestMatchers("user/login", "user/register", "user/verify/account", "user/**").permitAll()
                                 .anyRequest().authenticated())
                 .build();
     }
 
-    @Bean
+    @Bean //TODO
     public UserDetailsService userDetailsService() {
-        var user1 = User.withDefaultPasswordEncoder()
-                .username("user1")
-                .password("password1")
-                .roles("USER")
-                .build();
-        var user2 = User.withDefaultPasswordEncoder()
-                .username("user2")
-                .password("password2")
-                .roles("USER")
-                .build();
-        return new InMemoryUserDetailsManager(user1, user2);
+        return new MyUserDetailsService(userRepository, credentialRepository);
     }
-
-//    @Bean
-//    public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
-//        return new InMemoryUserDetailsManager(
-//                User.withUsername("saeed").password("123").roles("USER").build(),
-//                User.withUsername("saeed2").password("good").roles("USER").build()
-//        );
-//    }
-
 
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
