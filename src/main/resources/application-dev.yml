@@ -10,11 +10,15 @@ active_profile: dev
 testcontainers_port : 8081
 
 #Database
-database_username: root
-database_password:
+database_username: learn
+database_password: learn
 database_name: learn
 database_port: 3306
 database_host: localhost
 
 #cache
 expiryDuration: 900
+
+#jwt
+JWT_EXPIRATION: 432_000_000
+JWT_SECRET: ${JWT_SECRET}

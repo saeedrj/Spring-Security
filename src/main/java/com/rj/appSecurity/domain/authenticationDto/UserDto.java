@@ -1,13 +1,9 @@
 package com.rj.appSecurity.domain.authenticationDto;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
-@RequiredArgsConstructor
-@AllArgsConstructor
 public class UserDto {
 
     private Long id;
