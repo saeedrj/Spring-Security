@@ -1,6 +1,5 @@
-# Owner avatar  Spring Security
+# Spring Security
 
-## Tech Stack
 ### Backend:
 - **Spring Boot**: Handles RESTful APIs and file storage.
 - **Spring Data JPA**: Manages database interactions.
