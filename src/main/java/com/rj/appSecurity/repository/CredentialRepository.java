@@ -14,4 +14,5 @@ public interface CredentialRepository extends JpaRepository<CredentialEntity, Lo
     @Query("SELECT c.password FROM CredentialEntity c WHERE c.userEntity.id = :userId")
     String findPasswordByUserEntityId(@Param("userId") Long userId);
 
+    Optional<CredentialEntity> getCredentialEntityByUserEntityId(Long userId);
 }

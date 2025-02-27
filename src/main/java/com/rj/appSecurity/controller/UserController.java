@@ -8,9 +8,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Map;
 
 import static com.rj.appSecurity.utils.RequestUtils.getResponse;
 import static java.util.Collections.emptyMap;
@@ -38,11 +41,11 @@ public class UserController {
         return ResponseEntity.created(getUri()).body(getResponse(request, emptyMap(), "Account verified", OK));
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<?> login(@RequestBody UserRequestDto user) {
-//        Authentication authentication = authenticationManager.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(user.getEmail(), user.getPassword()));
-//        return ResponseEntity.ok(Map.of("user", authentication));
-//    }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserRequestDto user) {
+        Authentication authentication = authenticationManager.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(user.getEmail(), user.getPassword()));
+        return ResponseEntity.ok(Map.of("user", authentication));
+    }
 
     private URI getUri() {
         return URI.create("");

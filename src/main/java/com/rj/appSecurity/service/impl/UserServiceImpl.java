@@ -2,6 +2,7 @@ package com.rj.appSecurity.service.impl;
 
 import com.rj.appSecurity.cache.CacheStore;
 import com.rj.appSecurity.domain.RequestContext;
+import com.rj.appSecurity.domain.authenticationDto.UserDto;
 import com.rj.appSecurity.entity.ConfirmationEntity;
 import com.rj.appSecurity.entity.CredentialEntity;
 import com.rj.appSecurity.entity.RoleEntity;
@@ -26,6 +27,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 import static com.rj.appSecurity.utils.UserUtils.createUserEntity;
+import static com.rj.appSecurity.utils.UserUtils.fromUserEntity;
 
 @Service
 @Transactional(rollbackOn = Exception.class)
@@ -102,5 +104,25 @@ public class UserServiceImpl implements UserService {
             }
         }
         userRepository.save(userEntity);
+    }
+
+    @Override
+    public UserDto getUserByUserId(String userId) {
+        var userEntity = userRepository.findUserEntityByUserId(userId).orElseThrow(() -> new ApiException("User not found"));
+        return fromUserEntity(userEntity,userEntity.getRole(),getUserCredentialById(userEntity.getId()));
+    }
+
+    @Override
+    public UserDto getUserByEmail(String email) {
+        UserEntity userEntity = getUserEntityByEmail(email);
+        return fromUserEntity(userEntity,userEntity.getRole(),getUserCredentialById(userEntity.getId()));
+    }
+
+
+
+    @Override
+    public CredentialEntity getUserCredentialById(Long userID) {
+      var CredentialBy  = credentialRepository.getCredentialEntityByUserEntityId(userID);
+        return CredentialBy.orElseThrow(() -> new ApiException("Unable to find user Credential"));
     }
 }

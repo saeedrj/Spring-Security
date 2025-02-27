@@ -1,7 +1,7 @@
 package com.rj.appSecurity.service.impl;
 
 import com.rj.appSecurity.exception.ApiException;
-import com.rj.appSecurity.service.EmailSerivce;
+import com.rj.appSecurity.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +16,7 @@ import static com.rj.appSecurity.utils.EmailUtils.getResetPasswordMessage;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class EmailServiceImpl implements EmailSerivce {
+public class EmailServiceImpl implements EmailService {
 
     private static final String NEW_USER_ACCOUNT_VERIFICATION = "New User Account Verification";
     private static final String REST_PASSWORD_REQUEST = "Rest Password Request";
